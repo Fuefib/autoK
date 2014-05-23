@@ -12,6 +12,7 @@ AutoK.paramOff = "off"
 AutoK.paramAvA = "ava"
 AutoK.paramDebug = "debug"
 AutoK.deltaTime = 5
+AutoK.uniqueId = "AutoK_for_the_win"
 
 -- Slash Commands handler
 SLASH_COMMANDS["/" .. AutoK.slashCommand] = function (param)
@@ -29,13 +30,14 @@ SLASH_COMMANDS["/" .. AutoK.slashCommand] = function (param)
 end
 
 
-function AutoKUpdate ()
+function AutoKUpdate()
 	local currentTime = GetTimeStamp()
 	if(GetDiffBetweenTimeStamps(currentTime, AutoK.previousTime) > AutoK.deltaTime ) then
 		AutoK.previousTime = currentTime
 	
+		AutoK.debug("checking ...")
+	
 		local groupSize = GetGroupSize()
-		local members = ""
 		
 		if(groupSize > 0) then
 			for id=1,groupSize
@@ -43,30 +45,23 @@ function AutoKUpdate ()
 				local unitTag = GetGroupUnitTagByIndex(id)
 				local isOnline = IsUnitOnline(unitTag)
 				local isInAvA = AutoK.isInCyrodiil(unitTag)
-			
-				if(AutoK.isLogDebug) then
-					members = members .. "    " 
-					members = members .. GetUnitName(unitTag)
-					members = members .. " (" .. tostring(isOnline) .. "/" .. tostring(AutoK.isInCyrodiil(unitTag)).. ")"
-					members = members .. " - " .. GetUnitZone(unitTag)
-					members = members .. "\n"
-				end
-				
+							
 				if( (not isOnline and AutoK.isActive) 
 					or (not isInAvA and AutoK.isAvAOnly) ) then
 					GroupKick(unitTag)			
 				end
 			end
 		
-		else if (AutoK.isActive) then
-				d("[autoK] Group is now empty, AutoK will be disabled")
-				AutoK.setOff()
-			end
+		elseif (AutoK.isActive) then
+			d("[autoK] Group is now empty, AutoK will be disabled")
+			AutoK.setOff()
 		end
-		
-		if(AutoK.isLogDebug) then
-			AutoK.debug(groupSize, members)
-		end
+	end
+end
+
+AutoK.debug = function (message)
+	if(AutoK.isLogDebug) then
+		d("[autoK] debug -- " .. message)
 	end
 end
 
@@ -74,14 +69,9 @@ AutoK.isInCyrodiil = function (member)
 	return GetUnitZone(member) == "Cyrodiil"
 end
 
-AutoK.debug = function (groupSize,members) 
-	AutoKTime:SetText(string.format("Time: %s", GetTimeString()))
-	AutoKPartySize:SetText(string.format("Party Size: %d", groupSize))
-	AutoKActive:SetText(string.format("Active: %s ; AvA : %s", tostring(AutoK.isActive), tostring(AutoK.isAvAOnly)))
-	AutoKCampaignInfo:SetText(string.format("Current Campaign : %s", GetCurrentCampaignId()))
-	AutoKMembers:SetText(string.format("Members: \n%s", members))
+AutoK.registerEvent = function ()
+	EVENT_MANAGER:RegisterForEvent(AutoK.uniqueId,  EVENT_TRACKING_UPDATE , AutoK.update)
 end
-
 
 AutoK.setOn = function ()
 	local groupSize = GetGroupSize()
@@ -97,12 +87,6 @@ AutoK.setOn = function ()
 	end
 end
 
-AutoK.setOff = function  ()
-	d("[autoK] Disabling AutoK")
-	AutoK.isActive = false
-	AutoK.isAvAOnly = false
-end
-
 AutoK.setAvA = function  ()
 	local groupSize = GetGroupSize()
 	if(groupSize > 0 and IsPlayerInAvAWorld()) then
@@ -115,6 +99,14 @@ AutoK.setAvA = function  ()
 		AutoK.isAvAOnly = false
 	end
 end
+
+AutoK.setOff = function  ()
+	d("[autoK] Disabling AutoK")
+	AutoK.isActive = false
+	AutoK.isAvAOnly = false
+end
+
+
 
 AutoK.showHelp = function ()
 	d("AutoK Help :")
