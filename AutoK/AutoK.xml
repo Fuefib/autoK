@@ -34,10 +34,17 @@
 								point="TOPLEFT" offsetX="0" offsetY="4"/>
                 </Label>
 				
-				<Label 	name="$(parent)Members" 
+				<Label 	name="$(parent)CampaignInfo" 
 						font="ZoFontGame" color="CFDCBD" 
 						text="">
 						<Anchor relativeTo="$(parent)Active" relativePoint="BOTTOMLEFT"
+								point="TOPLEFT" offsetX="0" offsetY="4"/>
+                </Label>
+				
+				<Label 	name="$(parent)Members" 
+						font="ZoFontGame" color="CFDCBD" 
+						text="">
+						<Anchor relativeTo="$(parent)CampaignInfo" relativePoint="BOTTOMLEFT"
 								point="TOPLEFT" offsetX="0" offsetY="4"/>
                 </Label>
             </Controls>
