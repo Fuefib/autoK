@@ -111,6 +111,6 @@ end
 AutoK.showHelp = function ()
 	d("AutoK Help :")
 	d("  '/" .. AutoK.slashCommand .. " on'  - Enable AutoK. Will kick offline players.")
-	d("  '/" .. AutoK.slashCommand .. " ava' - Enable AutoK in AvA only mode. Will kick players who are offline, out of Cyrodill, or in another campaign.")
+	d("  '/" .. AutoK.slashCommand .. " ava' - Enable AutoK in AvA only mode. Will kick players who are offline, out of Cyrodill.")
 	d("  '/" .. AutoK.slashCommand .. " off' - Disable AutoK. Will no longer kick offline players.")
 end
