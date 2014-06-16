@@ -1,8 +1,7 @@
 ## Title: AutoK
-## Version: 1.0
+## Version: 1.1
 ## Author: Fuefib
 ## APIVersion: 100004
 ## 
 
 AutoK.lua
-AutoK.xml
